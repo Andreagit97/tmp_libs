@@ -1,35 +1,4 @@
 {
-    "_help_parse": "Options affecting listfile parsing",
-    "parse": {
-      "_help_additional_commands": [
-        "Specify structure for custom cmake functions"
-      ],
-      "additional_commands": {
-        "foo": {
-          "flags": [
-            "BAR",
-            "BAZ"
-          ],
-          "kwargs": {
-            "HEADERS": "*",
-            "SOURCES": "*",
-            "DEPENDS": "*"
-          }
-        }
-      },
-      "_help_override_spec": [
-        "Override configurations per-command where available"
-      ],
-      "override_spec": {},
-      "_help_vartags": [
-        "Specify variable tags."
-      ],
-      "vartags": [],
-      "_help_proptags": [
-        "Specify property tags."
-      ],
-      "proptags": []
-    },
     "_help_format": "Options affecting formatting.",
     "format": {
       "_help_disable": [
@@ -39,7 +8,7 @@
       "_help_line_width": [
         "How wide to allow formatted cmake files"
       ],
-      "line_width": 80,
+      "line_width": 100,
       "_help_tab_size": [
         "How many spaces to tab for indent"
       ],
@@ -91,7 +60,7 @@
         "If a statement is wrapped to more than one line, than dangle",
         "the closing parenthesis on its own line."
       ],
-      "dangle_parens": false,
+      "dangle_parens": true,
       "_help_dangle_align": [
         "If the trailing parenthesis must be 'dangled' on its on",
         "line, then align it to this reference: `prefix`: the start",
@@ -281,31 +250,5 @@
       "max_arguments": 5,
       "max_localvars": 15,
       "max_statements": 50
-    },
-    "_help_encode": "Options affecting file encoding",
-    "encode": {
-      "_help_emit_byteorder_mark": [
-        "If true, emit the unicode byte-order mark (BOM) at the start",
-        "of the file"
-      ],
-      "emit_byteorder_mark": false,
-      "_help_input_encoding": [
-        "Specify the encoding of the input file. Defaults to utf-8"
-      ],
-      "input_encoding": "utf-8",
-      "_help_output_encoding": [
-        "Specify the encoding of the output file. Defaults to utf-8.",
-        "Note that cmake only claims to support utf-8 so be careful",
-        "when using anything else"
-      ],
-      "output_encoding": "utf-8"
-    },
-    "_help_misc": "Miscellaneous configurations options.",
-    "misc": {
-      "_help_per_command": [
-        "A dictionary containing any per-command configuration",
-        "overrides. Currently only `command_case` is supported."
-      ],
-      "per_command": {}
     }
 }

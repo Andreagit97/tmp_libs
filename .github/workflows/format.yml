@@ -1,16 +1,14 @@
-name: Linting code
+name: Format code
 on:
   pull_request_target:
 jobs:
-  
   clang-format:
     name: clang-format 🐲
     runs-on: ubuntu-22.04
     steps:
-      
       - name: Install dependencies ⛓️
         run: sudo apt install -y make git
-      
+
       - name: Install LLVM and Clang 📥
         uses: KyleMayes/install-llvm-action@v1.5.3
         with:
@@ -61,7 +59,6 @@ jobs:
     name: cmake-format 🥶
     runs-on: ubuntu-22.04
     steps:
-      
       - name: Install dependencies ⛓️
         run: sudo apt install -y make git pip
 
@@ -107,67 +104,3 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.template.outputs.result }}
           reactions: confused
-
-  clang-tidy:
-    name: clang-tidy 🧹
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Install clang-tools 📥
-        uses: KyleMayes/install-llvm-action@v1.5.3
-        with:
-          version: 12.0.0
-          directory: ${{ runner.temp }}/llvm
-
-      - name: Install project dependencies ⛓️
-        run: |
-          sudo apt update
-          sudo apt install git cmake build-essential pkg-config autoconf libtool libelf-dev -y
-          sudo apt install libssl-dev libc-ares-dev libprotobuf-dev protobuf-compiler libjq-dev libgrpc++-dev protobuf-compiler-grpc libcurl4-openssl-dev libyaml-cpp-dev -y
-          sudo apt install libgtest-dev libjsoncpp-dev libtbb-dev libb64-dev -y
-
-      - name: Checkout repository 🎉
-        uses: actions/checkout@v3
-
-      - name: Create result directory 📂
-        run: |
-          mkdir clang-tidy-result
-
-      - name: Expose cmake compilation flags 🎏
-        run: cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-      - name: Get all files changed by the pull request 🗄️
-        id: files
-        uses: jitterbit/get-changed-files@v1
-
-      - name: Apply clang-tidy 🤕
-        run: |
-          END=""
-          FOUND=0
-          for changed_file in ${{ steps.files.outputs.all }}; do
-              if (echo "${changed_file}" | grep -E '\.(cpp|h|c)$$')
-              then
-                  END+=" ${changed_file}"
-                  FOUND=1
-              fi    
-          done
-
-          if (($FOUND == 1))
-          then
-            clang-tidy -p build --export-fixes clang-tidy-result/fixes.yml ${END}
-          fi
-
-      - name: Run clang-tidy-pr-comments action 💬
-        uses: platisd/clang-tidy-pr-comments@1.1.7
-        with:
-          # The GitHub token (or a personal access token)
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # The path to the clang-tidy fixes generated previously
-          clang_tidy_fixes: clang-tidy-result/fixes.yml
-          # Optionally set to true if you want the Action to request
-          # changes in case warnings are found
-          request_changes: false
-          # Optionally set the number of comments per review
-          # to avoid GitHub API timeouts for heavily loaded
-          # pull requests
-          suggestions_per_comment: 10

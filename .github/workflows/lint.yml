@@ -8,27 +8,30 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Install clang-tools 📥
-        uses: KyleMayes/install-llvm-action@v1.5.3
+        uses: KyleMayes/install-llvm-action@v2.0.4
         with:
-          version: 12.0.0
+          version: 17.0.6
           directory: ${{ runner.temp }}/llvm
 
       - name: Install project dependencies ⛓️
         run: |
-          sudo apt update
-          sudo apt install git cmake build-essential pkg-config autoconf libtool libelf-dev -y
-          sudo apt install libssl-dev libc-ares-dev libprotobuf-dev protobuf-compiler libjq-dev libgrpc++-dev protobuf-compiler-grpc libcurl4-openssl-dev libyaml-cpp-dev -y
-          sudo apt install libgtest-dev libjsoncpp-dev libtbb-dev libb64-dev -y
-
-      - name: Checkout repository 🎉
-        uses: actions/checkout@v3
-
-      - name: Create result directory 📂
+          sudo apt update && sudo apt install -y --no-install-recommends curl ca-certificates build-essential git clang llvm pkg-config autoconf automake libtool libelf-dev wget libc-ares-dev libcurl4-openssl-dev libssl-dev libtbb-dev libjq-dev libjsoncpp-dev libgrpc++-dev protobuf-compiler-grpc libgtest-dev libprotobuf-dev
+      
+      - name: Checkout Libs ⤵️
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+            fetch-depth: 0
+    
+      - name: Install deps ⛓️
         run: |
-          mkdir clang-tidy-result
+            sudo .github/install-deps.sh
 
       - name: Expose cmake compilation flags 🎏
-        run: cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: |
+          mkdir clang-tidy-result
+          mkdir -p build
+          cd build && cmake -DUSE_BUNDLED_DEPS=Off -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          make scap-open -j3
 
       - name: Get all files changed by the pull request 🗄️
         id: files
@@ -45,13 +48,13 @@ jobs:
                   FOUND=1
               fi    
           done
-
           if (($FOUND == 1))
           then
             clang-tidy -p build --export-fixes clang-tidy-result/fixes.yml ${END}
           fi
 
       - name: Run clang-tidy-pr-comments action 💬
+        if: always()
         uses: platisd/clang-tidy-pr-comments@1.1.7
         with:
           # The GitHub token (or a personal access token)

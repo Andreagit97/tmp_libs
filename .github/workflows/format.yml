@@ -36,20 +36,21 @@ jobs:
           name: format_diff.patch
           path: ./format_diff.patch
 
-    #   - name: Render markdown template 📰
-    #     if: failure()
-    #     id: template
-    #     uses: chuhlomin/render-template@v1.4
-    #     with:
-    #       template: .github/LINT_TEMPLATE.md
-    #       vars: |
-    #         url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-    #         file: format_diff.patch
+      - name: Render markdown template 📰
+        if: failure()
+        id: template
+        uses: chuhlomin/render-template@v1.4
+        with:
+          template: .github/LINT_TEMPLATE.md
+          vars: |
+            url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            file: format_diff.patch
 
-    #   - name: Issue a new comment with the link to the clang-format.patch 💬
-    #     if: failure()
-    #     uses: peter-evans/create-or-update-comment@v2
-    #     with:
-    #       issue-number: ${{ github.event.pull_request.number }}
-    #       body: ${{ steps.template.outputs.result }}
-    #       reactions: eyes
+      - name: Issue a new comment with the link to the clang-format.patch 💬
+        if: failure()
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.template.outputs.result }}
+          reactions: eyes

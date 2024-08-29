@@ -16,6 +16,8 @@ limitations under the License.
 
 */
 
+
+
 #include <libscap/scap_platform_impl.h>
 #include <libscap/scap_platform.h>
 
@@ -23,7 +25,7 @@ limitations under the License.
 #include <libscap/scap-int.h>
 
 int32_t scap_generic_init_platform(struct scap_platform* platform,
-                                   char* lasterr,
+                                   char* lasterr_,
                                    struct scap_open_args* oargs) {
 	memset(&platform->m_machine_info, 0, sizeof(platform->m_machine_info));
 	memset(&platform->m_agent_info, 0, sizeof(platform->m_agent_info));

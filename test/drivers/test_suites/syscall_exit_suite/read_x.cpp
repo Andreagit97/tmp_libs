@@ -4,8 +4,7 @@
 
 #if defined(__NR_close) && defined(__NR_open)
 
-TEST(SyscallExit, readX_no_snaplen)
-{
+TEST(SyscallExit, readX_no_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -31,8 +30,7 @@ TEST(SyscallExit, readX_no_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -53,8 +51,7 @@ TEST(SyscallExit, readX_no_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_snaplen)
-{
+TEST(SyscallExit, readX_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -80,8 +77,7 @@ TEST(SyscallExit, readX_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -102,8 +98,7 @@ TEST(SyscallExit, readX_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readXfail)
-{
+TEST(SyscallExit, readXfail) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -123,8 +118,7 @@ TEST(SyscallExit, readXfail)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -145,8 +139,7 @@ TEST(SyscallExit, readXfail)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_ipv4_tcp_message_truncated_by_snaplen)
-{
+TEST(SyscallExit, readX_ipv4_tcp_message_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -154,7 +147,9 @@ TEST(SyscallExit, readX_ipv4_tcp_message_truncated_by_snaplen)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.syscall_num = __NR_read}, protocol_L3::IPv4, protocol_L4::TCP);
+	                           receive_data{.syscall_num = __NR_read},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -162,8 +157,7 @@ TEST(SyscallExit, readX_ipv4_tcp_message_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -178,20 +172,19 @@ TEST(SyscallExit, readX_ipv4_tcp_message_truncated_by_snaplen)
 
 	/* Parameter 2: data (type: PT_BYTEBUF) */
 	evt_test->assert_bytebuf_param(2, LONG_MESSAGE, DEFAULT_SNAPLEN);
-	
 
 	/*=============================== ASSERT PARAMETERS  ===========================*/
 
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_ipv4_tcp_message_not_truncated_fullcapture_port)
-{
+TEST(SyscallExit, readX_ipv4_tcp_message_not_truncated_fullcapture_port) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
 
-	// Now the client port is in the range so we should see the full message not truncated by the snaplen.
+	// Now the client port is in the range so we should see the full message not truncated by the
+	// snaplen.
 	evt_test->set_fullcapture_port_range(IPV4_PORT_CLIENT, IPV4_PORT_CLIENT);
 
 	evt_test->enable_capture();
@@ -199,7 +192,9 @@ TEST(SyscallExit, readX_ipv4_tcp_message_not_truncated_fullcapture_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.syscall_num = __NR_read}, protocol_L3::IPv4, protocol_L4::TCP);
+	                           receive_data{.syscall_num = __NR_read},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -214,8 +209,7 @@ TEST(SyscallExit, readX_ipv4_tcp_message_not_truncated_fullcapture_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -230,14 +224,13 @@ TEST(SyscallExit, readX_ipv4_tcp_message_not_truncated_fullcapture_port)
 
 	/* Parameter 2: data (type: PT_BYTEBUF) */
 	evt_test->assert_bytebuf_param(2, LONG_MESSAGE, MAX_RECV_BUF_SIZE);
-	
+
 	/*=============================== ASSERT PARAMETERS  ===========================*/
 
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_ipv4_udp_message_truncated_by_snaplen)
-{
+TEST(SyscallExit, readX_ipv4_udp_message_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -245,7 +238,9 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_by_snaplen)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.syscall_num = __NR_read}, protocol_L3::IPv4, protocol_L4::UDP);
+	                           receive_data{.syscall_num = __NR_read},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -253,8 +248,7 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -269,14 +263,13 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_by_snaplen)
 
 	/* Parameter 2: data (type: PT_BYTEBUF) */
 	evt_test->assert_bytebuf_param(2, LONG_MESSAGE, DEFAULT_SNAPLEN);
-	
+
 	/*=============================== ASSERT PARAMETERS  ===========================*/
 
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_ipv4_udp_message_truncated_fullcapture_client_port)
-{
+TEST(SyscallExit, readX_ipv4_udp_message_truncated_fullcapture_client_port) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
@@ -288,7 +281,9 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_fullcapture_client_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.syscall_num = __NR_read}, protocol_L3::IPv4, protocol_L4::UDP);
+	                           receive_data{.syscall_num = __NR_read},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -303,8 +298,7 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_fullcapture_client_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -318,22 +312,22 @@ TEST(SyscallExit, readX_ipv4_udp_message_truncated_fullcapture_client_port)
 	evt_test->assert_numeric_param(1, (int64_t)MAX_RECV_BUF_SIZE);
 
 	/* Parameter 2: data (type: PT_BYTEBUF) */
-	// We cannot retrieve the client port and so the FULLCAPTURE_PORT_RANGE logic doesn't increase the snaplen.
+	// We cannot retrieve the client port and so the FULLCAPTURE_PORT_RANGE logic doesn't increase
+	// the snaplen.
 	evt_test->assert_bytebuf_param(2, LONG_MESSAGE, DEFAULT_SNAPLEN);
-	
+
 	/*=============================== ASSERT PARAMETERS  ===========================*/
 
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, readX_ipv4_udp_message_not_truncated_fullcapture_server_port)
-{
+TEST(SyscallExit, readX_ipv4_udp_message_not_truncated_fullcapture_server_port) {
 	auto evt_test = get_syscall_event_test(__NR_read, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
 
-	// In this case we should be able to retrieve the server port from the kernel socket because it is the local port
-	// We are receiving on the server.
+	// In this case we should be able to retrieve the server port from the kernel socket because it
+	// is the local port We are receiving on the server.
 	evt_test->set_fullcapture_port_range(IPV4_PORT_SERVER, IPV4_PORT_SERVER);
 
 	evt_test->enable_capture();
@@ -341,7 +335,9 @@ TEST(SyscallExit, readX_ipv4_udp_message_not_truncated_fullcapture_server_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.syscall_num = __NR_read}, protocol_L3::IPv4, protocol_L4::UDP);
+	                           receive_data{.syscall_num = __NR_read},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -356,8 +352,7 @@ TEST(SyscallExit, readX_ipv4_udp_message_not_truncated_fullcapture_server_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -372,7 +367,7 @@ TEST(SyscallExit, readX_ipv4_udp_message_not_truncated_fullcapture_server_port)
 
 	/* Parameter 2: data (type: PT_BYTEBUF) */
 	evt_test->assert_bytebuf_param(2, LONG_MESSAGE, MAX_RECV_BUF_SIZE);
-	
+
 	/*=============================== ASSERT PARAMETERS  ===========================*/
 
 	evt_test->assert_num_params_pushed(2);

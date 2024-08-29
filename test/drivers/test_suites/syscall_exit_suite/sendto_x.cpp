@@ -2,21 +2,22 @@
 
 #ifdef __NR_sendto
 
-#if defined(__NR_connect) && defined(__NR_socket) && defined(__NR_bind) && defined(__NR_listen) &&                     \
-	defined(__NR_close) && defined(__NR_setsockopt) && defined(__NR_shutdown)
+#if defined(__NR_connect) && defined(__NR_socket) && defined(__NR_bind) && defined(__NR_listen) && \
+        defined(__NR_close) && defined(__NR_setsockopt) && defined(__NR_shutdown)
 
 /*=============================== TCP ===========================*/
 
-TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_by_snaplen)
-{
+TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
 
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
-	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto}, receive_data{.skip_recv_phase = true},
-					protocol_L3::IPv4, protocol_L4::TCP);
+	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto},
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -24,8 +25,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -46,8 +46,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_by_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv4_tcp_message_truncated_by_snaplen)
-{
+TEST(SyscallExit, sendtoX_ipv4_tcp_message_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -55,7 +54,9 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_truncated_by_snaplen)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.skip_recv_phase = true}, protocol_L3::IPv4, protocol_L4::TCP);
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -63,8 +64,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -85,8 +85,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_truncated_by_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port)
-{
+TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
@@ -99,7 +98,9 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.skip_recv_phase = true}, protocol_L3::IPv4, protocol_L4::TCP);
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -114,8 +115,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -136,8 +136,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv6_tcp_message_not_truncated_fullcapture_port)
-{
+TEST(SyscallExit, sendtoX_ipv6_tcp_message_not_truncated_fullcapture_port) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
@@ -150,7 +149,9 @@ TEST(SyscallExit, sendtoX_ipv6_tcp_message_not_truncated_fullcapture_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.skip_recv_phase = true}, protocol_L3::IPv6, protocol_L4::TCP);
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv6,
+	                           protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -165,8 +166,7 @@ TEST(SyscallExit, sendtoX_ipv6_tcp_message_not_truncated_fullcapture_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -187,8 +187,7 @@ TEST(SyscallExit, sendtoX_ipv6_tcp_message_not_truncated_fullcapture_port)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port_NULL_sockaddr)
-{
+TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port_NULL_sockaddr) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
@@ -200,8 +199,10 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port_NULL_s
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(
-		send_data{.syscall_num = __NR_sendto, .greater_snaplen = true, .null_sockaddr = true},
-		receive_data{.skip_recv_phase = true}, protocol_L3::IPv4, protocol_L4::TCP);
+	        send_data{.syscall_num = __NR_sendto, .greater_snaplen = true, .null_sockaddr = true},
+	        receive_data{.skip_recv_phase = true},
+	        protocol_L3::IPv4,
+	        protocol_L4::TCP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -216,8 +217,7 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port_NULL_s
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -240,16 +240,17 @@ TEST(SyscallExit, sendtoX_ipv4_tcp_message_not_truncated_fullcapture_port_NULL_s
 
 /*=============================== UDP ===========================*/
 
-TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_by_snaplen)
-{
+TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
 
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
-	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto}, receive_data{.skip_recv_phase = true},
-					protocol_L3::IPv4, protocol_L4::UDP);
+	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto},
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -257,8 +258,7 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -279,8 +279,7 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_by_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv4_udp_message_truncated_by_snaplen)
-{
+TEST(SyscallExit, sendtoX_ipv4_udp_message_truncated_by_snaplen) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -288,7 +287,9 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_truncated_by_snaplen)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.skip_recv_phase = true}, protocol_L3::IPv4, protocol_L4::UDP);
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -296,8 +297,7 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_truncated_by_snaplen)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -318,8 +318,7 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_truncated_by_snaplen)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port)
-{
+TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->set_do_dynamic_snaplen(true);
@@ -331,7 +330,9 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port)
 	/*=============================== TRIGGER SYSCALL  ===========================*/
 
 	evt_test->client_to_server(send_data{.syscall_num = __NR_sendto, .greater_snaplen = true},
-					receive_data{.skip_recv_phase = true}, protocol_L3::IPv4, protocol_L4::UDP);
+	                           receive_data{.skip_recv_phase = true},
+	                           protocol_L3::IPv4,
+	                           protocol_L4::UDP);
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
 
@@ -346,8 +347,7 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port)
 	 */
 	evt_test->set_fullcapture_port_range(0, 0);
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -368,12 +368,12 @@ TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port)
 	evt_test->assert_num_params_pushed(2);
 }
 
-// We cannot call a sendto without a destination address in UDP. Errno: 89 err_message: Destination address required.
-// TEST(SyscallExit, sendtoX_ipv4_udp_message_not_truncated_fullcapture_port_NULL_sockaddr)
+// We cannot call a sendto without a destination address in UDP. Errno: 89 err_message: Destination
+// address required. TEST(SyscallExit,
+// sendtoX_ipv4_udp_message_not_truncated_fullcapture_port_NULL_sockaddr)
 #endif
 
-TEST(SyscallExit, sendtoX_fail)
-{
+TEST(SyscallExit, sendtoX_fail) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -387,8 +387,10 @@ TEST(SyscallExit, sendtoX_fail)
 	struct sockaddr* dest_addr = NULL;
 	socklen_t addrlen = 0;
 
-	assert_syscall_state(SYSCALL_FAILURE, "sendto",
-			     syscall(__NR_sendto, mock_fd, sent_data, len, sendto_flags, dest_addr, addrlen));
+	assert_syscall_state(
+	        SYSCALL_FAILURE,
+	        "sendto",
+	        syscall(__NR_sendto, mock_fd, sent_data, len, sendto_flags, dest_addr, addrlen));
 	int64_t errno_value = -errno;
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
@@ -397,8 +399,7 @@ TEST(SyscallExit, sendtoX_fail)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 
@@ -419,8 +420,7 @@ TEST(SyscallExit, sendtoX_fail)
 	evt_test->assert_num_params_pushed(2);
 }
 
-TEST(SyscallExit, sendtoX_empty)
-{
+TEST(SyscallExit, sendtoX_empty) {
 	auto evt_test = get_syscall_event_test(__NR_sendto, EXIT_EVENT);
 
 	evt_test->enable_capture();
@@ -434,8 +434,10 @@ TEST(SyscallExit, sendtoX_empty)
 	struct sockaddr* dest_addr = NULL;
 	socklen_t addrlen = 0;
 
-	assert_syscall_state(SYSCALL_FAILURE, "sendto",
-			     syscall(__NR_sendto, mock_fd, sent_data, len, sendto_flags, dest_addr, addrlen));
+	assert_syscall_state(
+	        SYSCALL_FAILURE,
+	        "sendto",
+	        syscall(__NR_sendto, mock_fd, sent_data, len, sendto_flags, dest_addr, addrlen));
 	int64_t errno_value = -errno;
 
 	/*=============================== TRIGGER SYSCALL ===========================*/
@@ -444,8 +446,7 @@ TEST(SyscallExit, sendtoX_empty)
 
 	evt_test->assert_event_presence();
 
-	if(HasFatalFailure())
-	{
+	if(HasFatalFailure()) {
 		return;
 	}
 

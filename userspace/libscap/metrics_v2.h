@@ -24,7 +24,6 @@ limitations under the License.
 extern "C" {
 #endif
 
-
 //
 // Limits for metrics_v2 metric name
 //
@@ -63,7 +62,7 @@ typedef union metrics_v2_value {
 	int i;
 } metrics_v2_value;
 
-typedef enum metrics_v2_value_type{
+typedef enum metrics_v2_value_type {
 	METRIC_VALUE_TYPE_U32,
 	METRIC_VALUE_TYPE_S32,
 	METRIC_VALUE_TYPE_U64,
@@ -74,7 +73,7 @@ typedef enum metrics_v2_value_type{
 	METRIC_VALUE_TYPE_MAX,
 } metrics_v2_value_type;
 
-typedef enum metrics_v2_value_unit{
+typedef enum metrics_v2_value_unit {
 	METRIC_VALUE_UNIT_COUNT,
 	METRIC_VALUE_UNIT_RATIO,
 	METRIC_VALUE_UNIT_PERC,
@@ -89,7 +88,7 @@ typedef enum metrics_v2_value_unit{
 	METRIC_VALUE_UNIT_MAX,
 } metrics_v2_value_unit;
 
-typedef enum metrics_v2_metric_type{
+typedef enum metrics_v2_metric_type {
 	METRIC_VALUE_METRIC_TYPE_MONOTONIC,
 	METRIC_VALUE_METRIC_TYPE_NON_MONOTONIC_CURRENT,
 	METRIC_VALUE_METRIC_TYPE_MAX,
@@ -98,8 +97,7 @@ typedef enum metrics_v2_metric_type{
 /*!
   \brief Metrics schema, used for libscap and libsinsp metrics about an in progress capture.
 */
-typedef struct metrics_v2
-{
+typedef struct metrics_v2 {
 	/* Metric metadata */
 	char name[METRIC_NAME_MAX];
 	uint32_t flags;

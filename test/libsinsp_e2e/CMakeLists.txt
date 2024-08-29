@@ -2,17 +2,15 @@
 #
 # Copyright (C) 2024 The Falco Authors.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and limitations under
+# the License.
 #
 
 message(STATUS "Libsinsp unit e2e tests build enabled")
@@ -24,14 +22,15 @@ endif()
 add_compile_options(${FALCOSECURITY_LIBS_USERSPACE_COMPILE_FLAGS})
 add_link_options(${FALCOSECURITY_LIBS_USERSPACE_LINK_FLAGS})
 
-# Create a libsinsp_test_var.h file with some variables used by our tests
-# for example the kmod path or the bpf path.
-configure_file (
+# Create a libsinsp_test_var.h file with some variables used by our tests for example the kmod path
+# or the bpf path.
+configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/libsinsp_test_var.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/libsinsp_test_var.h"
 )
 
-add_executable(libsinsp_e2e_tests
+add_executable(
+    libsinsp_e2e_tests
     capture_to_file_test.cpp
     container/container.cpp
     container/container_cgroup.cpp
@@ -60,16 +59,12 @@ else()
     add_dependencies(libsinsp_e2e_tests driver)
 endif()
 
-target_link_libraries(libsinsp_e2e_tests
-    sinsp
-    GTest::gtest
-    pthread
-)
+target_link_libraries(libsinsp_e2e_tests sinsp GTest::gtest pthread)
 
-target_include_directories(libsinsp_e2e_tests
-    PRIVATE
-    ${PROJECT_BINARY_DIR}/driver/src
-    "${CMAKE_CURRENT_BINARY_DIR}" # used to include `libsinsp_test_var.h`
+target_include_directories(
+    libsinsp_e2e_tests
+    PRIVATE ${PROJECT_BINARY_DIR}/driver/src "${CMAKE_CURRENT_BINARY_DIR}" # used to include
+                                                                           # `libsinsp_test_var.h`
 )
 
 add_executable(test_helper test_helper.cpp)
@@ -96,17 +91,12 @@ if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 endif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_helper.sh.in
-    ${CMAKE_CURRENT_BINARY_DIR}/test_helper.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_helper.sh.in ${CMAKE_CURRENT_BINARY_DIR}/test_helper.sh
 )
 
-file(COPY
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources/
-    DESTINATION
-    ${CMAKE_CURRENT_BINARY_DIR}/resources/
-)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/)
 
 execute_process(
-     COMMAND tar xzf ${CMAKE_CURRENT_BINARY_DIR}/resources/fake-proc.tar.gz
-     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/
- )
+    COMMAND tar xzf ${CMAKE_CURRENT_BINARY_DIR}/resources/fake-proc.tar.gz
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/resources/
+)

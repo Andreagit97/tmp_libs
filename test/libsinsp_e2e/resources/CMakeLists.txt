@@ -27,7 +27,6 @@ add_executable(chname chname.cpp)
 target_link_libraries(chname pthread)
 add_dependencies(libsinsp_e2e_tests chname)
 
-
 if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
     add_executable(execve execve.c)
     add_dependencies(libsinsp_e2e_tests execve)

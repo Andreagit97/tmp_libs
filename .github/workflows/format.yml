@@ -7,7 +7,7 @@ on:
 
 jobs:
   format:
-    name: clang-format 🐲
+    name: format code 🐲
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository 🎉

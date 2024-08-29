@@ -1,9 +1,6 @@
 name: Lint code
 on:
   pull_request:
-  push:
-    branches:
-      - master
 
 jobs:
   clang-tidy:

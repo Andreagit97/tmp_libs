@@ -1,7 +1,6 @@
-Report {{ .tool }}
-===
+# Format Report
 
-Hi 🖖 Sorry if I bother you but `{{ .tool }}` found some files not correctly linted.
+Hi 🖖 Sorry if I bother you but some files are not correctly formatted.
 You can follow these steps to solve the issue:
 
 1. Download the git diff from this URL (you can find it at the bottom of the page, it's called `{{ .file }}`):
@@ -22,5 +21,5 @@ You can follow these steps to solve the issue:
 4. Add a **NEW** commit to your pull request with the title:
 
 ```bash
-    style: apply {{ .tool }}
+    style: apply format
 ```

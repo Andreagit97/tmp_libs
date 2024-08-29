@@ -36,70 +36,20 @@ jobs:
           name: format_diff.patch
           path: ./format_diff.patch
 
-      - name: Render markdown template 📰
-        if: failure()
-        id: template
-        uses: chuhlomin/render-template@v1.4
-        with:
-          template: .github/LINT_TEMPLATE.md
-          vars: |
-            tool: clang-format
-            url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            file: format_diff.patch
+    #   - name: Render markdown template 📰
+    #     if: failure()
+    #     id: template
+    #     uses: chuhlomin/render-template@v1.4
+    #     with:
+    #       template: .github/LINT_TEMPLATE.md
+    #       vars: |
+    #         url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    #         file: format_diff.patch
 
-      - name: Issue a new comment with the link to the clang-format.patch 💬
-        if: failure()
-        uses: peter-evans/create-or-update-comment@v2
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: ${{ steps.template.outputs.result }}
-          reactions: eyes
-#   cmake-format:
-#     name: cmake-format 🥶
-#     runs-on: ubuntu-22.04
-#     steps:
-#       - name: Install dependencies ⛓️
-#         run: sudo apt install -y make git pip
-
-#       - name: Install cmake-format 📥
-#         run: pip install "cmakelang[YAML]==0.6.13"
-
-#       - name: Checkout repository 🎉
-#         uses: actions/checkout@v3
-
-#       - name: Check linting with cmake-format 🔍
-#         run: make check-cmake
-
-#       - name: Apply cmake-format 🤕
-#         if: failure()
-#         run: make format-cmake
-
-#       - name: Generate a git-diff 🚒
-#         if: failure()
-#         run: git diff > cmake_format_diff.patch
-
-#       - name: Upload the git diff artifact 📦
-#         if: failure()
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: cmake_format_diff.patch
-#           path: ./cmake_format_diff.patch
-
-#       - name: Render markdown template 📰
-#         if: failure()
-#         id: template
-#         uses: chuhlomin/render-template@v1.4
-#         with:
-#           template: .github/LINT_TEMPLATE.md
-#           vars: |
-#             tool: cmake-format
-#             url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-#             file: cmake_format_diff.patch
-
-#       - name: Issue a new comment with the link to the cmake-format.patch 💬
-#         if: failure()
-#         uses: peter-evans/create-or-update-comment@v2
-#         with:
-#           issue-number: ${{ github.event.pull_request.number }}
-#           body: ${{ steps.template.outputs.result }}
-#           reactions: confused
+    #   - name: Issue a new comment with the link to the clang-format.patch 💬
+    #     if: failure()
+    #     uses: peter-evans/create-or-update-comment@v2
+    #     with:
+    #       issue-number: ${{ github.event.pull_request.number }}
+    #       body: ${{ steps.template.outputs.result }}
+    #       reactions: eyes
